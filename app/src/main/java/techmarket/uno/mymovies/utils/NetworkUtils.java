@@ -61,12 +61,13 @@ public class NetworkUtils {
         return result;
     }
 
+
     //метод, который будет получать из JSON сети
     public static JSONObject getJSONFromNetwork(int sortBy, int page){
         JSONObject result = null;
-        URL url = buildURL(sortBy,page);
+        URL url = buildURL(sortBy,page);                ////////////////////////
         try {
-            result = new JSONLoadTask().execute(url).get();
+            result = new JSONLoadTask().execute(url).get();/////////////////////////
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
