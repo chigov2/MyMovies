@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -19,26 +21,47 @@ import techmarket.uno.mymovies.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerViewPosters;
-    private MovieAdapter movieAdapter;                                      ////////////////////
+    private MovieAdapter movieAdapter;
+    private Switch switchSort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        switchSort = findViewById(R.id.switchSort);
         recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
+
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this,3));
         //получаем список фильмов
         movieAdapter = new MovieAdapter();
-        JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(NetworkUtils.POPULARITY,1);
-        //после этого получим список фильмов
-        ArrayList<Movie> movies = null;
-        try {
-            movies = JSONUtils.getMoviesFromJSON(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        movieAdapter.setMovies(movies);
         recyclerViewPosters.setAdapter(movieAdapter);
+        //чтобы фильмы сразу загрузились
+        switchSort.setChecked(true);
+        //и добавляем к нему слушатель....
+        switchSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int methodOfSort;
+                if (isChecked){
+                    methodOfSort = NetworkUtils.TOP_RATED;
+                }else{
+                    methodOfSort = NetworkUtils.POPULARITY;
+                }
+                //copied
+                JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort,1);
+                //после этого получим список фильмов
+                ArrayList<Movie> movies = null;
+                try {
+                    movies = JSONUtils.getMoviesFromJSON(jsonObject);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                movieAdapter.setMovies(movies);
+            }
+        });
+        //и потом установили его обратно
+        switchSort.setChecked(false);
     }
 }
 

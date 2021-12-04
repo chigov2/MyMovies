@@ -1,5 +1,6 @@
 package techmarket.uno.mymovies.utils;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;

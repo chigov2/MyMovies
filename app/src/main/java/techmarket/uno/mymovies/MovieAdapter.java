@@ -22,8 +22,6 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         movies = new ArrayList<>();
     }
 
-
-
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,7 +35,6 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         Movie movie = movies.get(position);
         //ImageView imageView = holder.imageViewSmallPoster;
         Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
-
     }
 
     @Override
