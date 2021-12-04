@@ -6,19 +6,21 @@ public class Movie {
     private String title;
     private String originalTitle;
     private String overview;
-    private String posterPath;
+    private String posterPath; //картинка маленькая
+    private String bigPosterPath; //картинка маленькая
     private String releaseDate;
     private String backdropPath;// poster
     private double voteAverage;
 
     //создаем конструктор(shift + ins)
-    public Movie(int id, int voteCount, String title, String originalTitle, String overview, String posterPath, String releaseDate, String backdropPath, double voteAverage) {
+    public Movie(int id, int voteCount, String title, String originalTitle, String overview, String posterPath, String bigPosterPath,String releaseDate, String backdropPath, double voteAverage) {
         this.id = id;
         this.voteCount = voteCount;
         this.title = title;
         this.originalTitle = originalTitle;
         this.overview = overview;
         this.posterPath = posterPath;
+        this.bigPosterPath = bigPosterPath;
         this.releaseDate = releaseDate;
         this.backdropPath = backdropPath;
         this.voteAverage = voteAverage;
@@ -44,6 +46,10 @@ public class Movie {
     public String getTitle() {
         return title;
     }
+
+    public String getBigPosterPath() {return bigPosterPath; }
+
+    public void setBigPosterPath(String bigPosterPath) {this.bigPosterPath = bigPosterPath;}
 
     public void setTitle(String title) {
         this.title = title;
