@@ -17,9 +17,35 @@ import techmarket.uno.mymovies.data.Movie;
 public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHolder> {
 
     private ArrayList<Movie> movies;
+
+    //создаем объект интерфейсного типа
+    private OnPosterClickListener onPosterClickListener;
+    private OnReachEndListener onReachEndListener;
+
     //создаем пустой конструктор
     public MovieAdapter() {
         movies = new ArrayList<>();
+    }
+
+
+    //интерфейс для нажатия на маленькие картинки
+    interface OnPosterClickListener{
+        //в нём будет один метод и принимает позицию
+        void onPosterClick(int position);
+    }
+    //setter  - потом оидем в конструктор MovieViewHolder
+    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
+        this.onPosterClickListener = onPosterClickListener;
+    }
+
+
+    //интерфейс для подгрузки контента
+    interface OnReachEndListener{
+        void onReachEnd();
+    }
+
+    public void setOnReachEndListener(OnReachEndListener onReachEndListener) {
+        this.onReachEndListener = onReachEndListener;
     }
 
     @NonNull
@@ -31,6 +57,10 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+        //проверка где находимся
+        if (position > movies.size() - 4 && onPosterClickListener != null){
+            onReachEndListener.onReachEnd();
+        }
     // надо взять imageView и установить у него фото из фильма
         Movie movie = movies.get(position);
         //ImageView imageView = holder.imageViewSmallPoster;
@@ -45,9 +75,19 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
     class MovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageViewSmallPoster;//нужен доступ к элементу из movie_item.xml
 
+        //конструктор MovieViewHolder
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
+            itemView.setOnClickListener(new View.OnClickListener() {//анонимный класс
+                @Override
+                public void onClick(View v) {
+                    //переопреляем метол onClick
+                    if (onPosterClickListener != null){
+                        onPosterClickListener.onPosterClick(getAdapterPosition());
+                    }
+                }
+            });
         }
     }
     //чтобы можно было устанавливать новый массив - создается сеттер и геттер
