@@ -54,6 +54,10 @@ public class MainViewModel extends AndroidViewModel {// будет наслед�
         new DeleteMovieTask().execute();
     }
 
+    public LiveData<List<Movie>> getMovies() {
+        return movies;
+    }
+
     private static class InsertTask extends AsyncTask<Movie, Void, Void> {
 
         @Override
@@ -70,10 +74,7 @@ public class MainViewModel extends AndroidViewModel {// будет наслед�
 
         @Override
         protected Void doInBackground(Void... integers) {
-            if (integers != null && integers.length > 0)
-            {
-                database.movieDAO().deleteAllMovies();
-            }
+            database.movieDAO().deleteAllMovies();
             return null;
         }
     }
@@ -81,12 +82,9 @@ public class MainViewModel extends AndroidViewModel {// будет наслед�
     private static class DeleteMovieTask extends AsyncTask<Movie, Void, Void> {
 
         @Override
-        protected Void doInBackground(Movie... movies) {
-            if (movies != null && movies.length > 0)
-            {
-                database.movieDAO().deleteMovie(movies[0]);
-            }
-            return null;
+        protected Void doInBackground(Movie... movies) {//проверка не нужна
+               database.movieDAO().deleteMovie(movies[0]);
+               return null;
         }
     }
 }

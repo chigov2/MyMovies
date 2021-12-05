@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import techmarket.uno.mymovies.data.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHolder> {
 
-    private ArrayList<Movie> movies;
+    private List<Movie> movies;
 
     //создаем объект интерфейсного типа
     private OnPosterClickListener onPosterClickListener;
@@ -58,7 +59,7 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         //проверка где находимся
-        if (position > movies.size() - 4 && onPosterClickListener != null){
+        if (position > movies.size() - 3 && onPosterClickListener != null){
             onReachEndListener.onReachEnd();
         }
     // надо взять imageView и установить у него фото из фильма
@@ -91,16 +92,17 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         }
     }
     //чтобы можно было устанавливать новый массив - создается сеттер и геттер
-    public void setMovies(ArrayList<Movie> movies) {
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
 
-    public ArrayList<Movie> getMovies() {
+    public List<Movie> getMovies() {
         return movies;
     }
     //чтобы не обновлять постоянно массив
-    public void addMovies(ArrayList<Movie> movies){
+
+    public void addMovies(List<Movie> movies){
         this.movies.addAll(movies);                 /////////////////////////////////////
         notifyDataSetChanged();
     }
