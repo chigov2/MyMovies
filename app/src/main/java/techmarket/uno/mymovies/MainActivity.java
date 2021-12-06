@@ -1,19 +1,18 @@
 package techmarket.uno.mymovies;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
         movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {//создаем новый  анаонимный класс
             @Override
             public void onPosterClick(int position) {//преопреляем метод, который объявили в интерфейсе
-                Toast.makeText(MainActivity.this, "Clicked" + position, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "Clicked" + position, Toast.LENGTH_SHORT).show();
+                //получаем фильм, на который нажали
+
             }
         });
 
