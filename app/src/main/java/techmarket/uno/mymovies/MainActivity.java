@@ -74,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "End of list", Toast.LENGTH_SHORT).show();
             }
         });
-        LiveData<List<Movie>> moviesFromLiveData = viewModel.getMovies();
 
+        LiveData<List<Movie>> moviesFromLiveData = viewModel.getMovies();
         //добавляем обсервер
         moviesFromLiveData.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
-                //когда данные в базе будут меняться - будем устанавливыать их у адаптера
+                //когда данные в базе будут меняться - будем устанавливыать их в адаптере
                 movieAdapter.setMovies(movies);
             }
         });

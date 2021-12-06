@@ -13,23 +13,23 @@ import java.util.concurrent.ExecutionException;
 public class MainViewModel extends AndroidViewModel {// будет наследоваться от
     //создаем список фильмов
     private LiveData<List<Movie>> movies;
-    //создаем объект базы данных
-    private static MovieDatabase database;
-    public MainViewModel(@NonNull Application application) {
+    private static MovieDatabase database;//создаем объект базы данных
+    public MainViewModel(@NonNull Application application) {//конструктор
         super(application);
-        database = MovieDatabase.getInstance(getApplication());
-        movies = database.movieDAO().getAllMovies();
+        database = MovieDatabase.getInstance(getApplication());//присваиваем знвчениев конструкторе
+        movies = database.movieDAO().getAllMovies();//присваиваем знвчениев конструкторе
     }
 
+    public LiveData<List<Movie>> getMovies() {
+        return movies;
+    }//геттер на List
     //методы для доступа к данным
     //возврат объекта movie
     public Movie getMovieById (int id) throws ExecutionException, InterruptedException {
         // все действия должны быть в другом программном потоке
         // - создаем класс GetMovieTask
         return new GetMovieTask().execute(id).get();
-    }
-
-                                                        //принимает
+    }                                                        //принимает
     private static class GetMovieTask extends AsyncTask<Integer, Void, Movie> {
 
         @Override
@@ -46,18 +46,6 @@ public class MainViewModel extends AndroidViewModel {// будет наслед�
     public void insertMovies(Movie movie){
         new InsertTask().execute(movie);
     }
-    //метод для удаления элементов
-    public void deleteAllMovies(){
-        new DeleteMoviesTask().execute();
-    }
-    public void deleteMovie(Movie movie){
-        new DeleteMovieTask().execute();
-    }
-
-    public LiveData<List<Movie>> getMovies() {
-        return movies;
-    }
-
     private static class InsertTask extends AsyncTask<Movie, Void, Void> {
 
         @Override
@@ -70,6 +58,9 @@ public class MainViewModel extends AndroidViewModel {// будет наслед�
         }
     }
 
+    public void deleteAllMovies(){
+        new DeleteMoviesTask().execute();
+    }  //метод для удаления элементов
     private static class DeleteMoviesTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -78,7 +69,9 @@ public class MainViewModel extends AndroidViewModel {// будет наслед�
             return null;
         }
     }
-
+    public void deleteMovie(Movie movie){
+        new DeleteMovieTask().execute();
+    }
     private static class DeleteMovieTask extends AsyncTask<Movie, Void, Void> {
 
         @Override
