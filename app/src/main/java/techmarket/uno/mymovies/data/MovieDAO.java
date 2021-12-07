@@ -14,7 +14,7 @@ public interface MovieDAO {
     @Query("SELECT * FROM movies")
     LiveData<List<Movie>> getAllMovies();
 
-    @Query("SELECT * FROM favourite_movies")  //////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    @Query("SELECT * FROM favourite_movies")
     LiveData<List<FavouriteMovie>> getAllFavouriteMovies();
 
     // метод возвращает экземпляр фильма по id
@@ -24,7 +24,7 @@ public interface MovieDAO {
 //    @Query("SELECT * FROM favourite_movies WHERE id == :movieId")
 //    Movie getFavouriteMoviesById(int movieId);
 
-    @Query("SELECT * FROM favourite_movies WHERE id == :movieId")
+    @Query("SELECT * FROM favourite_movies WHERE id == :movieId") ////////////////////problem padenie
     FavouriteMovie getFavouriteMovieById(int movieId);
 
     //удалить все данные из таблицы
