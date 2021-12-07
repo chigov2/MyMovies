@@ -2,8 +2,10 @@ package techmarket.uno.mymovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -12,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.ExecutionException;
 
+import techmarket.uno.mymovies.data.FavouriteMovie;
 import techmarket.uno.mymovies.data.MainViewModel;
 import techmarket.uno.mymovies.data.Movie;
 
@@ -62,5 +65,16 @@ public class DetailActivity extends AppCompatActivity {
         textViewOverview.setText(movie.getOverview());
         textViewReleaseDate.setText(movie.getReleaseDate());
         textViewRating.setText(Double.toString(movie.getVoteAverage()));
+    }
+
+    public void onClickChangeFavorite(View view) throws ExecutionException, InterruptedException {
+        FavouriteMovie favouriteMovie = viewModel.getFavouriteMovieById(id);
+        if (favouriteMovie == null){// в базе фильиа нет - надо добавить
+            viewModel.insertFavouriteMovie(new FavouriteMovie(movie));
+            Toast.makeText(this, "Object added to favourite", Toast.LENGTH_SHORT).show();
+        }else{
+            viewModel.deleteFavouriteMovie(favouriteMovie);
+            Toast.makeText(this, "Object deleted from favourite", Toast.LENGTH_SHORT).show();
+        }
     }
 }
