@@ -1,5 +1,6 @@
 package techmarket.uno.mymovies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -64,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
             public void onPosterClick(int position) {//преопреляем метод, который объявили в интерфейсе
                 //Toast.makeText(MainActivity.this, "Clicked" + position, Toast.LENGTH_SHORT).show();
                 //получаем фильм, на который нажали
+                Movie movie = movieAdapter.getMovies().get(position);
+                Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+                intent.putExtra("id",movie.getId());
+                startActivity(intent);
+
 
             }
         });

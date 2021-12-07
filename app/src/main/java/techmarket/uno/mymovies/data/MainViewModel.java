@@ -11,12 +11,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainViewModel extends AndroidViewModel {// будет наследоваться от
-    //создаем список фильмов
-    private LiveData<List<Movie>> movies;
+
+    private LiveData<List<Movie>> movies;//создаем список фильмов
     private static MovieDatabase database;//создаем объект базы данных
-    public MainViewModel(@NonNull Application application) {//конструктор
+
+    //конструктор
+    public MainViewModel(@NonNull Application application) {
         super(application);
-        database = MovieDatabase.getInstance(getApplication());//присваиваем знвчениев конструкторе
+        database = MovieDatabase.getInstance(getApplication());//присваиваем знвчение в конструкторе
         movies = database.movieDAO().getAllMovies();//присваиваем знвчениев конструкторе
     }
 

@@ -18,7 +18,7 @@ public abstract class MovieDatabase extends RoomDatabase {
     //получаем экземпляр БД
     public static MovieDatabase getInstance(Context context) {
         synchronized (LOCK) {                                           //4 добавить блок синхронизаци
-            if (database == null) {
+            if (database == null) {//создается таблица?
                 database = Room.databaseBuilder(context, MovieDatabase.class, DB_NAME).build();
             }
             return database;

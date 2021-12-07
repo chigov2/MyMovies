@@ -96,7 +96,7 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
         this.movies = movies;
         notifyDataSetChanged();
     }
-
+    //getter
     public List<Movie> getMovies() {
         return movies;
     }
