@@ -59,8 +59,8 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         //проверка где находимся
-        if (position > movies.size() - 3 && onPosterClickListener != null){
-            onReachEndListener.onReachEnd();
+        if (position > movies.size() - 3 && onReachEndListener != null){ ///onPosterClickListener //onReachEndListener
+          onReachEndListener.onReachEnd();
         }
     // надо взять imageView и установить у него фото из фильма
         Movie movie = movies.get(position);
