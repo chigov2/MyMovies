@@ -2,6 +2,7 @@ package techmarket.uno.mymovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -86,11 +87,18 @@ public class DetailActivity extends AppCompatActivity {
             movie = viewModel.getMovieById(id);
         } catch (ExecutionException e) {
             e.printStackTrace();
+            Log.i("test", String.valueOf(e));
         } catch (InterruptedException e) {
+            Log.i("test", String.valueOf(e));
             e.printStackTrace();
         }
         //после этого устанавливаем у всех элементов нужные значения
-        Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
+        try {
+            Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("test", String.valueOf(e));
+        }
         textViewTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle()); //Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.TextView.setText(java.lang.CharSequence)' on a null object reference
         textViewOverview.setText(movie.getOverview());

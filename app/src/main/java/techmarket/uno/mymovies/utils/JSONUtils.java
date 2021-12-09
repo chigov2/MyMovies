@@ -1,8 +1,5 @@
 package techmarket.uno.mymovies.utils;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,11 +7,21 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import techmarket.uno.mymovies.data.Movie;
+import techmarket.uno.mymovies.data.Review;
 
 public class JSONUtils {//после создания классав муви необходимо разобрать JSON
 
     //первым делом получить result
     private static final String KEY_RESULTS = "results";
+    //для отзывов
+    private static final String KEY_AUTHOR = "author";
+    private static final String KEY_CONTENT = "content";
+    //для видео
+    private static final String KEY_OF_VIDEO = "key";
+    private static final String KEY_NAME = "name";
+
+
+    //для информации о фильме
     private static final String KEY_id = "id";
     private static final String KEY_VOTE_COUNT = "vote_count";
     private static final String KEY_TITLE = "title";
@@ -27,6 +34,22 @@ public class JSONUtils {//после создания классав муви н
     private static final String BASE_POSTER_URL = "https://image.tmdb.org/t/p/";
     private static final String SMALL_POSTER_SIZE = "w185";
     private static final String BIG_POSTER_SIZE = "w780";
+
+    public static ArrayList<Review> getReviewFromJSON(JSONObject jsonObject) throws JSONException {
+        ArrayList<Review> result = new ArrayList<>();
+        if (jsonObject == null){
+            return  result;
+        }
+        JSONArray jsonArray = jsonObject.getJSONArray(KEY_RESULTS);
+        for (int i = 0; i < jsonArray.length(); i++){
+            JSONObject jsonObjectReview = jsonArray.optJSONObject(i);
+            String author = jsonObjectReview.getString(KEY_AUTHOR);
+            String content = jsonObjectReview.getString(KEY_CONTENT);
+            Review review = new Review(author,content);
+            result.add(review);
+        }
+        return result;
+    }
 
     //сделав запрос к базе - должны получить массив с фильмами
     //возвращать будет ArrayList<Movie>, а принимать JSONObject jsonObject
