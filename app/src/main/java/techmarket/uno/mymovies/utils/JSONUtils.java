@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import techmarket.uno.mymovies.data.Movie;
 import techmarket.uno.mymovies.data.Review;
+import techmarket.uno.mymovies.data.Trailer;
 
 public class JSONUtils {//после создания классав муви необходимо разобрать JSON
 
@@ -19,6 +20,7 @@ public class JSONUtils {//после создания классав муви н
     //для видео
     private static final String KEY_OF_VIDEO = "key";
     private static final String KEY_NAME = "name";
+    private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
 
     //для информации о фильме
@@ -47,6 +49,22 @@ public class JSONUtils {//после создания классав муви н
             String content = jsonObjectReview.getString(KEY_CONTENT);
             Review review = new Review(author,content);
             result.add(review);
+        }
+        return result;
+    }
+
+    public static ArrayList<Trailer> getTrailersFromJSON(JSONObject jsonObject) throws JSONException {
+        ArrayList<Trailer> result = new ArrayList<>();
+        if (jsonObject == null){
+            return  result;
+        }
+        JSONArray jsonArray = jsonObject.getJSONArray(KEY_RESULTS);
+        for (int i = 0; i < jsonArray.length(); i++){
+            JSONObject jsonObjectTrailers = jsonArray.optJSONObject(i);
+            String key = BASE_YOUTUBE_URL + jsonObjectTrailers.getString(KEY_OF_VIDEO);
+            String name = jsonObjectTrailers.getString(KEY_NAME);
+            Trailer trailer = new Trailer(key,name);
+            result.add(trailer);
         }
         return result;
     }
