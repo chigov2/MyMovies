@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Movie.class, FavouriteMovie.class},version = 2, exportSchema = false)
+@Database(entities = {Movie.class, FavouriteMovie.class},version = 1, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     //используем паттерн singletone
     // создаем объект класса

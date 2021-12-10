@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import techmarket.uno.mymovies.adapters.MovieAdapter;
 import techmarket.uno.mymovies.data.MainViewModel;
 import techmarket.uno.mymovies.data.Movie;
 import techmarket.uno.mymovies.utils.JSONUtils;

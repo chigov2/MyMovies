@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import techmarket.uno.mymovies.adapters.MovieAdapter;
 import techmarket.uno.mymovies.data.FavouriteMovie;
 import techmarket.uno.mymovies.data.MainViewModel;
 import techmarket.uno.mymovies.data.Movie;

@@ -1,4 +1,4 @@
-package techmarket.uno.mymovies;
+package techmarket.uno.mymovies.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import techmarket.uno.mymovies.R;
 import techmarket.uno.mymovies.data.Movie;
 
 public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHolder> {
@@ -30,7 +31,7 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
 
 
     //интерфейс для нажатия на маленькие картинки
-    interface OnPosterClickListener{
+    public interface OnPosterClickListener{
         //в нём будет один метод и принимает позицию
         void onPosterClick(int position);
     }
@@ -41,7 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
 
 
     //интерфейс для подгрузки контента
-    interface OnReachEndListener{
+    public interface OnReachEndListener{
         void onReachEnd();
     }
 
