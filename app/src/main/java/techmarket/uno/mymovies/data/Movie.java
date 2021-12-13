@@ -1,12 +1,15 @@
 package techmarket.uno.mymovies.data;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 //преобразуем класс, чтобы он был таблицей в БД
 @Entity(tableName = "movies")                           //1
 public class Movie {
-    @PrimaryKey                                         //2, создаем интерфейс DAO - MovieDAO
+    @PrimaryKey(autoGenerate = true)
+    private  int uniqueId;
+                                     //2, создаем интерфейс DAO - MovieDAO
     private  int id;
     private int voteCount;
     private String title;
@@ -19,6 +22,23 @@ public class Movie {
     private double voteAverage;
 
     //создаем конструктор(shift + ins)
+    public Movie(int uniqueId, int id, int voteCount, String title, String originalTitle, String overview,
+                 String posterPath, String bigPosterPath,String releaseDate, String backdropPath, double voteAverage) {
+        this.uniqueId = uniqueId;
+        this.id = id;
+        this.voteCount = voteCount;
+        this.title = title;
+        this.originalTitle = originalTitle;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.bigPosterPath = bigPosterPath;
+        this.releaseDate = releaseDate;
+        this.backdropPath = backdropPath;
+        this.voteAverage = voteAverage;
+    }
+
+    //создаем конструктор(shift + ins)
+    @Ignore
     public Movie(int id, int voteCount, String title, String originalTitle, String overview,
                  String posterPath, String bigPosterPath,String releaseDate, String backdropPath, double voteAverage) {
         this.id = id;
@@ -31,6 +51,14 @@ public class Movie {
         this.releaseDate = releaseDate;
         this.backdropPath = backdropPath;
         this.voteAverage = voteAverage;
+    }
+
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     //создаем getters and setters для того, чтобы этот класс можно было использовать в БД

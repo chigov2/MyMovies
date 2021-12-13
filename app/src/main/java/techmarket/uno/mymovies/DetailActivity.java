@@ -1,6 +1,7 @@
 package techmarket.uno.mymovies;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,14 +15,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import techmarket.uno.mymovies.adapters.ReviewAdapter;
+import techmarket.uno.mymovies.adapters.TrailerAdapter;
 import techmarket.uno.mymovies.data.FavouriteMovie;
 import techmarket.uno.mymovies.data.MainViewModel;
 import techmarket.uno.mymovies.data.Movie;
+import techmarket.uno.mymovies.data.Review;
+import techmarket.uno.mymovies.data.Trailer;
+import techmarket.uno.mymovies.utils.JSONUtils;
+import techmarket.uno.mymovies.utils.NetworkUtils;
 
 public class DetailActivity extends AppCompatActivity {
     private ImageView imageViewBigPoster;
@@ -33,11 +46,17 @@ public class DetailActivity extends AppCompatActivity {
     private TextView textViewOverview;
     private ImageView imageViewAddToFavorite;
     private FavouriteMovie favouriteMovie;
+    private RecyclerView recyclerViewTrailers;
+    private RecyclerView recyclerViewReviews;
+    private ReviewAdapter reviewAdapter;
+    private TrailerAdapter trailerAdapter;
 
     private int id;
     private Movie movie;
     //надо получить фильм из БД – создадим объект
     private MainViewModel viewModel;
+    private ArrayList<Trailer> trailers = null;
+    private ArrayList<Review> reviews = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,6 +124,36 @@ public class DetailActivity extends AppCompatActivity {
         textViewReleaseDate.setText(movie.getReleaseDate());
         textViewRating.setText(Double.toString(movie.getVoteAverage()));
         setFavourite();
+        recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
+        recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
+        reviewAdapter = new ReviewAdapter();
+        trailerAdapter = new TrailerAdapter();
+        trailerAdapter.setOnTrailerClickListener(new TrailerAdapter.OnTrailerClickListener() {
+            @Override
+            public void onTrailerClick(String url) {
+                Intent intentToTrailer = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intentToTrailer);
+                //Toast.makeText(DetailActivity.this, url, Toast.LENGTH_SHORT).show();
+            }
+        });
+        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewReviews.setAdapter(reviewAdapter);
+        recyclerViewTrailers.setAdapter(trailerAdapter);
+        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId());
+        JSONObject jsonObjectReviews = NetworkUtils.getJSONForReviews(movie.getId());
+        try {
+            trailers = JSONUtils.getTrailersFromJSON(jsonObjectTrailers);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            reviews = JSONUtils.getReviewFromJSON(jsonObjectReviews);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        reviewAdapter.setReviews(reviews);
+        trailerAdapter.setTrailers(trailers);
     }
 
     public void onClickChangeFavorite(View view) throws ExecutionException, InterruptedException {
