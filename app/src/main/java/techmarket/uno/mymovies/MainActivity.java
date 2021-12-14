@@ -12,16 +12,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +35,16 @@ import techmarket.uno.mymovies.data.Movie;
 import techmarket.uno.mymovies.utils.JSONUtils;
 import techmarket.uno.mymovies.utils.NetworkUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONObject> {
     private RecyclerView recyclerViewPosters;
     private MovieAdapter movieAdapter;
     private Switch switchSort;
     private TextView textViewPopularity;
     private TextView textViewTopRated;
     private MainViewModel viewModel;
+
+    private static final int LOADER_ID = 200;
+    private LoaderManager loaderManager;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -67,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loaderManager = LoaderManager.getInstance(this);
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         textViewPopularity = findViewById(R.id.textViewPopularity);
         textViewTopRated = findViewById(R.id.textViewTopRated);
@@ -147,10 +155,23 @@ public class MainActivity extends AppCompatActivity {
 
     //выносим загрузку в отдельный метод                                    ///////////   -7
     private void downloadData(int methodOfSort, int page){
-        JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort, 1);
-        //после этого получим список фильмов
+        URL url = NetworkUtils.buildURL(methodOfSort,page);
+        Bundle bundle = new Bundle();
+        bundle.putString("url",url.toString());
+        loaderManager.restartLoader(LOADER_ID,bundle,this);
+    }
+
+    @NonNull
+    @Override
+    public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
+        NetworkUtils.JSONLoader jsonLoader= new NetworkUtils.JSONLoader(this,args);
+        return jsonLoader;
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject data) {
         ArrayList<Movie> movies = null;
-        try { movies = JSONUtils.getMoviesFromJSON(jsonObject);} catch (JSONException e) {e.printStackTrace();}
+        try { movies = JSONUtils.getMoviesFromJSON(data);} catch (JSONException e) {e.printStackTrace();}
         if (movies != null && !movies.isEmpty()){
             //очистим предцдущие данные
             viewModel.deleteAllMovies();
@@ -159,6 +180,12 @@ public class MainActivity extends AppCompatActivity {
                 viewModel.insertMovies(movie);
             }
         }
+        loaderManager.destroyLoader(LOADER_ID);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<JSONObject> loader) {
+
     }
 }
 
