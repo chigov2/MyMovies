@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int LOADER_ID = 200;
     private LoaderManager loaderManager;
+    private static int page = 1;
+    private static boolean isLoading = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switchSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                page = 1;
                 setMethodOfSort(isChecked);
             }
         });
@@ -113,7 +116,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
             @Override
             public void onReachEnd() {
-                Toast.makeText(MainActivity.this, "End of list", Toast.LENGTH_SHORT).show();
+                if(!isLoading) {
+                    Toast.makeText(MainActivity.this, "End of list", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -123,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onChanged(List<Movie> movies) {
                 //когда данные в базе будут меняться - будем устанавливыать их в адаптере
-                movieAdapter.setMovies(movies);
+                //movieAdapter.setMovies(movies);
             }
         });
 
@@ -173,12 +178,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ArrayList<Movie> movies = null;
         try { movies = JSONUtils.getMoviesFromJSON(data);} catch (JSONException e) {e.printStackTrace();}
         if (movies != null && !movies.isEmpty()){
-            //очистим предцдущие данные
+            //очистим предыдущие данные
             viewModel.deleteAllMovies();
             //после вставляем новые данные
             for (Movie movie : movies){
                 viewModel.insertMovies(movie);
             }
+            movieAdapter.addMovies(movies);
+            page++;
         }
         loaderManager.destroyLoader(LOADER_ID);
     }
