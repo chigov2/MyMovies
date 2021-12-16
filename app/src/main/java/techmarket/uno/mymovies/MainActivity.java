@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int LOADER_ID = 200;
     private LoaderManager loaderManager;
     private static int page = 1;
+    private  static int methodOfSort;
     private static boolean isLoading = false;
 
     @Override
@@ -117,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onReachEnd() {
                 if(!isLoading) {
-                    Toast.makeText(MainActivity.this, "End of list", Toast.LENGTH_SHORT).show();
+                    downloadData(methodOfSort,page);
+                    //Toast.makeText(MainActivity.this, "End of list", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -145,17 +147,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void setMethodOfSort(boolean isTopRated) {//метод сделан для того, чтобы использоваться в трёх местах
-        int methodOfSort;
         if (isTopRated) {
-            methodOfSort = NetworkUtils.TOP_RATED;
             textViewTopRated.setTextColor(getResources().getColor(R.color.rose));
             textViewPopularity.setTextColor(getResources().getColor(R.color.white));
+            methodOfSort = NetworkUtils.TOP_RATED;
         } else {
             methodOfSort = NetworkUtils.POPULARITY;
             textViewPopularity.setTextColor(getResources().getColor(R.color.rose));
             textViewTopRated.setTextColor(getResources().getColor(R.color.white));
         }
-        downloadData(methodOfSort,1);
+        downloadData(methodOfSort,page);
     }
 
     //выносим загрузку в отдельный метод                                    ///////////   -7
@@ -170,6 +171,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
         NetworkUtils.JSONLoader jsonLoader= new NetworkUtils.JSONLoader(this,args);
+        jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
+            @Override
+            public void onStartLoading() {
+                isLoading =true;
+            }
+        });
         return jsonLoader;
     }
 
@@ -187,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             movieAdapter.addMovies(movies);
             page++;
         }
+        isLoading = false;
         loaderManager.destroyLoader(LOADER_ID);
     }
 
