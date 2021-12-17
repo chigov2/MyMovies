@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static int page = 1;
     private  static int methodOfSort;
     private static boolean isLoading = false;
+    private ProgressBar progressBarLoading;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         textViewTopRated = findViewById(R.id.textViewTopRated);
         switchSort = findViewById(R.id.switchSort);
         recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
+        progressBarLoading = findViewById(R.id.progressBarLoading);
 
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, 2));
         //получаем список фильмов
@@ -131,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onChanged(List<Movie> movies) {
                 //когда данные в базе будут меняться - будем устанавливыать их в адаптере
                 //movieAdapter.setMovies(movies);
+                if (page == 1){
+                    movieAdapter.setMovies(movies);
+                }
             }
         });
 
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         jsonLoader.setOnStartLoadingListener(new NetworkUtils.JSONLoader.OnStartLoadingListener() {
             @Override
             public void onStartLoading() {
+                progressBarLoading.setVisibility(View.VISIBLE);
                 isLoading =true;
             }
         });
@@ -185,8 +192,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ArrayList<Movie> movies = null;
         try { movies = JSONUtils.getMoviesFromJSON(data);} catch (JSONException e) {e.printStackTrace();}
         if (movies != null && !movies.isEmpty()){
+        if(page == 1){
             //очистим предыдущие данные
             viewModel.deleteAllMovies();
+            movieAdapter.clear();
+        }
             //после вставляем новые данные
             for (Movie movie : movies){
                 viewModel.insertMovies(movie);
@@ -195,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             page++;
         }
         isLoading = false;
+        progressBarLoading.setVisibility(View.INVISIBLE);
         loaderManager.destroyLoader(LOADER_ID);
     }
 

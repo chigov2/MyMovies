@@ -92,6 +92,12 @@ public class MovieAdapter extends RecyclerView.Adapter <MovieAdapter.MovieViewHo
             });
         }
     }
+
+    public void clear(){
+        this.movies.clear();
+        notifyDataSetChanged();
+    }
+
     //чтобы можно было устанавливать новый массив - создается сеттер и геттер
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
