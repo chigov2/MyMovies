@@ -13,7 +13,7 @@ public class FavouriteMovie extends Movie{//переопределяем кос�
     @Ignore
     public FavouriteMovie (Movie movie){
         //возвращает этотже фильм, но преобразованный в дочерний класс
-        super(movie.getUniqueId(),movie.getId(),movie.getVoteCount(),movie.getTitle(), movie.getTitle(), movie.getOverview(), movie.getPosterPath(),
+        super(movie.getUniqueId(),movie.getId(),movie.getVoteCount(), movie.getTitle(), movie.getOriginalTitle(),movie.getOverview(), movie.getPosterPath(),
                 movie.getBigPosterPath(), movie.getReleaseDate(),movie.getBackdropPath(), movie.getVoteAverage());
     }
 }

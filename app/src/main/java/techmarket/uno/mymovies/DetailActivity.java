@@ -122,7 +122,7 @@ public class DetailActivity extends AppCompatActivity {
         textViewOriginalTitle.setText(movie.getOriginalTitle()); //Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.TextView.setText(java.lang.CharSequence)' on a null object reference
         textViewOverview.setText(movie.getOverview());
         textViewReleaseDate.setText(movie.getReleaseDate());
-        //textViewRating.setText(Double.toString(movie.getVoteAverage()));
+        textViewRating.setText(Double.toString(movie.getVoteAverage()));
         setFavourite();
         recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
         recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
