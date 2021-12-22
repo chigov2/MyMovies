@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import techmarket.uno.mymovies.adapters.MovieAdapter;
 import techmarket.uno.mymovies.data.MainViewModel;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private  static int methodOfSort;
     private static boolean isLoading = false;
     private ProgressBar progressBarLoading;
+
+    private static String lang;// и присвоим значение в методе onCreate
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //чтобы получить язык, который используется на устройстве
+        lang = Locale.getDefault().getLanguage();
         loaderManager = LoaderManager.getInstance(this);
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         textViewPopularity = findViewById(R.id.textViewPopularity);
@@ -129,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onReachEnd() {
                 if(!isLoading) {
-                    downloadData(methodOfSort,page);
+                    downloadData(methodOfSort,page,lang);
                     //Toast.makeText(MainActivity.this, "End of list", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -170,12 +175,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             textViewPopularity.setTextColor(getResources().getColor(R.color.rose));
             textViewTopRated.setTextColor(getResources().getColor(R.color.white));
         }
-        downloadData(methodOfSort,page);
+        downloadData(methodOfSort,page,lang);
     }
 
     //выносим загрузку в отдельный метод                                    ///////////   -7
-    private void downloadData(int methodOfSort, int page){
-        URL url = NetworkUtils.buildURL(methodOfSort,page);
+    private void downloadData(int methodOfSort, int page, String lang){
+        URL url = NetworkUtils.buildURL(methodOfSort,page,lang);
         Bundle bundle = new Bundle();
         bundle.putString("url",url.toString());
         loaderManager.restartLoader(LOADER_ID,bundle,this);

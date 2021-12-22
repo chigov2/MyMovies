@@ -2,6 +2,7 @@ package techmarket.uno.mymovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -67,6 +68,9 @@ public class FavoriteActivity extends AppCompatActivity {
                 List<Movie> movies = new ArrayList<>();
                 if (favouriteMovies !=null){
                     movies.addAll(favouriteMovies);
+                    for (int i  = 0; i < movies.size(); i++) {
+                        Log.i("test1", String.valueOf(movies.get(i)));
+                    }
                     adapter.setMovies(movies);
                 }
             }
@@ -76,9 +80,11 @@ public class FavoriteActivity extends AppCompatActivity {
             @Override
             public void onPosterClick(int position) {
                 Movie movie = adapter.getMovies().get(position);
+                //Log.i("test", "test");
                 Intent intent = new Intent(FavoriteActivity.this, DetailActivity.class);
                 intent.putExtra("id", movie.getId());
                 startActivity(intent);
+
             }
         });
     }

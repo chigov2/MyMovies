@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import techmarket.uno.mymovies.adapters.ReviewAdapter;
@@ -50,6 +52,9 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView recyclerViewReviews;
     private ReviewAdapter reviewAdapter;
     private TrailerAdapter trailerAdapter;
+    private ScrollView scrollViewInfo;
+
+    private static String lang;
 
     private int id;
     private Movie movie;
@@ -86,6 +91,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        lang = Locale.getDefault().getLanguage();
         imageViewBigPoster=findViewById(R.id.imageViewBigPoster);//не было Caused by: java.lang.IllegalArgumentException: Target must not be null.
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewOriginalTitle = findViewById(R.id.textViewOriginalTitle);
@@ -93,6 +99,7 @@ public class DetailActivity extends AppCompatActivity {
         textViewReleaseDate = findViewById(R.id.textViewReleaseDate);
         textViewOverview = findViewById(R.id.textViewOverview);
         imageViewAddToFavorite = findViewById(R.id.imageViewAddToFavorite);
+        scrollViewInfo = findViewById(R.id.scrollViewInfo);
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("id")){
             //присваиваем значение
@@ -112,13 +119,20 @@ public class DetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         //после этого устанавливаем у всех элементов нужные значения
-        try {
-            Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
+        try {//error getBigPosterPath()' on a null object reference
+            //Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
+            Picasso.get()
+                    .load(movie.getBigPosterPath())
+                    .placeholder(R.drawable.placeholder_large)
+                    .into(imageViewBigPoster);
+            Log.i("test1",movie.getBigPosterPath());
         } catch (Exception e) {
             e.printStackTrace();
             Log.i("test", String.valueOf(e));
+            //Log.i("test", "test");
         }
         textViewTitle.setText(movie.getTitle());
+        Log.i("test1",movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle()); //Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.TextView.setText(java.lang.CharSequence)' on a null object reference
         textViewOverview.setText(movie.getOverview());
         textViewReleaseDate.setText(movie.getReleaseDate());
@@ -140,8 +154,8 @@ public class DetailActivity extends AppCompatActivity {
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewReviews.setAdapter(reviewAdapter);
         recyclerViewTrailers.setAdapter(trailerAdapter);
-        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId());
-        JSONObject jsonObjectReviews = NetworkUtils.getJSONForReviews(movie.getId());
+        JSONObject jsonObjectTrailers = NetworkUtils.getJSONForVideos(movie.getId(),lang);
+        JSONObject jsonObjectReviews = NetworkUtils.getJSONForReviews(movie.getId(),lang);
         try {
             trailers = JSONUtils.getTrailersFromJSON(jsonObjectTrailers);
         } catch (JSONException e) {
@@ -154,6 +168,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         reviewAdapter.setReviews(reviews);
         trailerAdapter.setTrailers(trailers);
+        scrollViewInfo.smoothScrollTo(0,0);
     }
 
     public void onClickChangeFavorite(View view) throws ExecutionException, InterruptedException {
